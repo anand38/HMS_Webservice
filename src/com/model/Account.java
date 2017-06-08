@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
+
 public class Account {
 	 String user = "anand_ic0Jh4nN";
 	    String password="qipzm?123";
@@ -41,5 +43,33 @@ public class Account {
 	    		return true;
 	    	}else
 	    		return false;
+	    }
+	    
+	    public String getName(String email) throws Exception{
+	    	dbConnect();
+	    	String name="";
+	    	String sql="select name from CANDIDATE_PERSONAL where candidate_id=(select candidate_id from CANDIDATE_LOGIN where email=?)";
+	    	PreparedStatement pstmt=con.prepareStatement(sql);
+	    	pstmt.setString(1, email);
+	    	ResultSet rst=pstmt.executeQuery();
+	    	while(rst.next()){
+	    		name=rst.getString("name");
+	    	}
+	    	dbClose();
+	    	return name;
+	    }
+	    
+	    public String getId(String email) throws Exception{
+	    	String id="";
+	    	dbConnect();
+	    	String sql="select candidate_id from CANDIDATE_LOGIN where email=?";
+	    	PreparedStatement pstmt=con.prepareStatement(sql);
+	    	pstmt.setString(1, email);
+	    	ResultSet rst=pstmt.executeQuery();
+	    	while(rst.next()){
+	    		id=String.valueOf(rst.getInt("candidate_id"));
+	    	}
+	    	dbClose();
+	    	return id;
 	    }
 }
